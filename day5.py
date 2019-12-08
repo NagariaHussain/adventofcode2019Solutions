@@ -19,10 +19,10 @@ print(len(puzzle_input))
 
 i = 0
 while i < len(puzzle_input):
-    # print(f"Index {i} and el: {puzzle_input[i]}")
+    print(f"Index {i} and el: {puzzle_input[i]}")
     inst = [int(x) for x in str(puzzle_input[i])]
     inst.reverse()
-    # print(inst)
+    print(inst)
     if inst[0] == 3:
         ui = int(input('Enter a single integer: '))
         puzzle_input[puzzle_input[i + 1]] = ui
@@ -45,6 +45,35 @@ while i < len(puzzle_input):
 
         output = input1 + input2 if inst[0] == 1 else input1 * input2
         puzzle_input[para3] = output
+        i += 4
+    # --- PART TWO ---
+    elif inst[0] == 5 or inst[0] == 6:
+        # jump-if-true/false
+        para1mode = inst[2] if len(inst) > 2 else 0
+        para1 = puzzle_input[i + 1] if para1mode == 1 else puzzle_input[puzzle_input[i + 1]]
+        
+        para2mode = inst[3] if len(inst) > 3 else 0
+        para2 = puzzle_input[i + 2] if para2mode == 1 else puzzle_input[puzzle_input[i + 2]]
+
+        if (not para1 == 0 and inst[0] == 5) or (para1 == 0 and inst[0] == 6):
+            i = para2
+        else:
+            i += 3
+    elif inst[0] == 7 or inst[0] == 8:
+        # less than
+        para1mode = inst[2] if len(inst) > 2 else 0
+        para1 = puzzle_input[i + 1] if para1mode == 1 else puzzle_input[puzzle_input[i + 1]]
+        
+        para2mode = inst[3] if len(inst) > 3 else 0
+        para2 = puzzle_input[i + 2] if para2mode == 1 else puzzle_input[puzzle_input[i + 2]]
+
+        para3mode = inst[4] if len(inst) > 4 else 0
+        para3 = puzzle_input[i + 3] if para3mode == 1 else puzzle_input[puzzle_input[i + 3]]
+        
+        if (para1 < para2 and inst[0] == 7) or (para1 == para2 and inst[0] == 8):
+            puzzle_input[para3] = 1
+        else:
+            puzzle_input[para3] = 0
         i += 4
     else:
         break
