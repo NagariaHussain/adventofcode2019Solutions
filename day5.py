@@ -15,6 +15,7 @@ puzzle_input = [3,225,1,225,6,6,1100,1,238,225,104,0,1101,
 224,2,224,1,223,224,223,4,223,99,0,0,0,677,0,0,0,0,0,0,0,0,0,0,0,1105,
 0,99999,1105,227,247,1105,1,99999,1005,227,99999,1005,0,256,1105,1,99999,1106,227,99999,1106,0,265,1105,1,99999,1006,0,99999,1006,227,274,1105,1,99999,1105,1,280,1105,1,99999,1,225,225,225,1101,294,0,0,105,1,0,1105,1,99999,1106,0,300,1105,1,99999,1,225,225,225,1101,314,0,0,106,0,0,1105,1,99999,7,677,677,224,102,2,223,223,1005,224,329,1001,223,1,223,1008,226,226,224,1002,223,2,223,1005,224,344,1001,223,1,223,1107,677,226,224,1002,223,2,223,1006,224,359,1001,223,1,223,107,677,677,224,102,2,223,223,1005,224,374,101,1,223,223,1108,677,226,224,102,2,223,223,1005,224,389,1001,223,1,223,1007,677,677,224,1002,223,2,223,1005,224,404,101,1,223,223,1008,677,226,224,102,2,223,223,1005,224,419,101,1,223,223,1108,226,677,224,102,2,223,223,1006,224,434,1001,223,1,223,8,677,226,224,1002,223,2,223,1005,224,449,101,1,223,223,1008,677,677,224,1002,223,2,223,1006,224,464,1001,223,1,223,1108,226,226,224,1002,223,2,223,1005,224,479,1001,223,1,223,1007,226,677,224,102,2,223,223,1005,224,494,1001,223,1,223,1007,226,226,224,102,2,223,223,1005,224,509,101,1,223,223,107,677,226,224,1002,223,2,223,1006,224,524,1001,223,1,223,108,677,677,224,102,2,223,223,1006,224,539,101,1,223,223,7,677,226,224,102,2,223,223,1006,224,554,1001,223,1,223,1107,226,677,224,102,2,223,223,1005,224,569,101,1,223,223,108,677,226,224,1002,223,2,223,1006,224,584,101,1,223,223,108,226,226,224,102,2,223,223,1006,224,599,1001,223,1,223,1107,226,226,224,102,2,223,223,1006,224,614,1001,223,1,223,8,226,677,224,102,2,223,223,1006,224,629,1001,223,1,223,107,226,226,224,102,2,223,223,1005,224,644,101,1,223,223,8,226,226,224,102,2,223,223,1006,224,659,101,1,223,223,7,226,677,224,102,2,223,223,1005,224,674,101,1,223,223,4,223,99,226]
 
+
 print(len(puzzle_input))
 
 i = 0
@@ -23,16 +24,20 @@ while i < len(puzzle_input):
     inst = [int(x) for x in str(puzzle_input[i])]
     inst.reverse()
     print(inst)
-    if inst[0] == 3:
+    opcode = inst[0]
+
+    if opcode == 3:
         ui = int(input('Enter a single integer: '))
         puzzle_input[puzzle_input[i + 1]] = ui
         i += 2
-    elif inst[0] == 4:
+
+    elif opcode == 4:
         mode = inst[2] if len(inst) > 2 else 0
         output = puzzle_input[i + 1] if mode == 1 else puzzle_input[puzzle_input[i + 1]]
         print(f"OUTPUT!!! {output}")
         i += 2
-    elif inst[0] == 1 or inst[0] == 2:
+
+    elif opcode == 1 or opcode == 2:
         para1 = puzzle_input[i + 1]
         para2 = puzzle_input[i + 2]
         para3 = puzzle_input[i + 3]
@@ -43,11 +48,11 @@ while i < len(puzzle_input):
         input1 = para1 if para1mode == 1 else puzzle_input[para1]
         input2 = para2 if para2mode == 1 else puzzle_input[para2]
 
-        output = input1 + input2 if inst[0] == 1 else input1 * input2
+        output = input1 + input2 if opcode == 1 else input1 * input2
         puzzle_input[para3] = output
         i += 4
     # --- PART TWO ---
-    elif inst[0] == 5 or inst[0] == 6:
+    elif opcode == 5 or opcode == 6:
         # jump-if-true/false
         para1mode = inst[2] if len(inst) > 2 else 0
         para1 = puzzle_input[i + 1] if para1mode == 1 else puzzle_input[puzzle_input[i + 1]]
@@ -55,22 +60,22 @@ while i < len(puzzle_input):
         para2mode = inst[3] if len(inst) > 3 else 0
         para2 = puzzle_input[i + 2] if para2mode == 1 else puzzle_input[puzzle_input[i + 2]]
 
-        if (not para1 == 0 and inst[0] == 5) or (para1 == 0 and inst[0] == 6):
+        if ((not para1 == 0) and opcode == 5) or (para1 == 0 and opcode == 6):
             i = para2
         else:
             i += 3
-    elif inst[0] == 7 or inst[0] == 8:
+    elif opcode == 7 or opcode == 8:
         # less than
+        print('OPCODE 7 or 8')
         para1mode = inst[2] if len(inst) > 2 else 0
         para1 = puzzle_input[i + 1] if para1mode == 1 else puzzle_input[puzzle_input[i + 1]]
         
         para2mode = inst[3] if len(inst) > 3 else 0
         para2 = puzzle_input[i + 2] if para2mode == 1 else puzzle_input[puzzle_input[i + 2]]
 
-        para3mode = inst[4] if len(inst) > 4 else 0
-        para3 = puzzle_input[i + 3] if para3mode == 1 else puzzle_input[puzzle_input[i + 3]]
+        para3 = puzzle_input[i + 3]
         
-        if (para1 < para2 and inst[0] == 7) or (para1 == para2 and inst[0] == 8):
+        if (para1 < para2 and opcode == 7) or (para1 == para2 and opcode == 8):
             puzzle_input[para3] = 1
         else:
             puzzle_input[para3] = 0
