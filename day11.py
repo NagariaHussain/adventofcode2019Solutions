@@ -20,7 +20,7 @@ class PaintingRobot:
         # Robot state config
         self.current_position = 0, 0
         self.current_direction = '^'
-        self.current_panel_color = 0
+        self.current_panel_color = 1  # IMP: Change to 0 for part one
         
         # Panel config
         self.color_config = defaultdict(lambda : 0)
@@ -32,9 +32,7 @@ class PaintingRobot:
         return len(set(self.painted_panels))
     
     def move(self, towards):
-        if towards == None:
-            print('OOOOOOOOOOOOOOOOOOOOOO')
-
+        # print('moving...')
         dy, dx = 0, 0
         if self.current_direction == '^':
             if towards == 0:
@@ -76,19 +74,13 @@ class PaintingRobot:
         x, y = self.current_position
         x += dx
         y += dy
-        # print(self.current_position)
         self.current_position = x, y
-        # print(self.current_position)
-        # print(dx, dy)
-        # print(self.current_position)
         self.current_panel_color = self.color_config[self.current_position]      
  
     def paint(self, color):
-        if color == None:
-            print('OOOOOOOOOOOOOOOOOOOOOO')
+        # print('painting...')
         self.color_config[self.current_position] = color
         self.painted_panels.append(self.current_position)
-        # print(self.color_config)
 
     def runInstruction(self):
         i = self.pointer
@@ -113,21 +105,15 @@ class PaintingRobot:
                     output = self.program_input[i + 1]
                 else:
                     output = self.program_input[self.program_input[i + 2] + self.relative_base]
-                # print(f'Before: {self.first_out, self.second_out}')
-                # print(output)
                 
-                if self.first_out:
+                if not self.first_out is None:
                     self.second_out = output
                     self.move(self.second_out)
                     self.first_out, self.second_out = None, None               
                 else:
                     self.first_out = output 
                     self.paint(self.first_out)
-                    # print(f'After: {self.first_out, self.second_out}')
 
-                
-                
-                
                 i += 2
                 
             elif opcode == 1 or opcode == 2:
@@ -238,3 +224,6 @@ robot.runInstruction()
 
 # answer
 print(robot.getUniquePanels())
+
+# ------------------- PART TWO ------------------
+# ANSWER: eight capital letters
