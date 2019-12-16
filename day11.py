@@ -10,6 +10,7 @@ for i in range(0, 9999999):
 
 
 class PaintingRobot:
+    '''Intcode based painting robot'''
     def __init__(self):
         # Intcode program config
         self.pointer = 0
@@ -17,6 +18,7 @@ class PaintingRobot:
         self.relative_base = 0
         self.first_out = None
         self.second_out = None
+        
         # Robot state config
         self.current_position = 0, 0
         self.current_direction = '^'
@@ -104,16 +106,15 @@ class PaintingRobot:
                 elif mode == 1:
                     output = self.program_input[i + 1]
                 else:
-                    output = self.program_input[self.program_input[i + 2] + self.relative_base]
+                    output = self.program_input[self.program_input[i + 1] + self.relative_base]
                 
                 if not self.first_out is None:
                     self.second_out = output
                     self.move(self.second_out)
                     self.first_out, self.second_out = None, None               
                 else:
-                    self.first_out = output 
+                    self.first_out = output
                     self.paint(self.first_out)
-
                 i += 2
                 
             elif opcode == 1 or opcode == 2:
@@ -147,7 +148,6 @@ class PaintingRobot:
                     self.program_input[para3 + self.relative_base] = output
                 i += 4
             
-            # --- PART TWO ---
             elif opcode == 5 or opcode == 6:
                 # jump-if-true/false
                 para1mode = mode
@@ -203,7 +203,6 @@ class PaintingRobot:
                 sec = inst[1] if len(inst) > 1 else 0
                 if not sec == 9: 
                     para1mode = mode
-                    para1 = self.program_input[i + 1] if para1mode == 1 else self.program_input[self.program_input[i + 1]]
                     if para1mode == 0:
                         para1 = self.program_input[self.program_input[i + 1]]
                     elif para1mode == 1:
@@ -222,8 +221,25 @@ class PaintingRobot:
 robot = PaintingRobot()
 robot.runInstruction()
 
-# answer
+# answer for part one
 print(robot.getUniquePanels())
 
 # ------------------- PART TWO ------------------
 # ANSWER: eight capital letters
+
+# Getting max and min values of x and y coords
+max_x = max(robot.painted_panels, key=lambda x: x[0])[0]
+max_y = max(robot.painted_panels, key=lambda x: x[1])[1]
+
+
+min_x = min(robot.painted_panels, key=lambda x: x[0])[0]
+min_y = min(robot.painted_panels, key=lambda x: x[1])[1]
+
+print(max_x, min_x, max_y, min_y)
+
+for i in range(max_y, min_y - 1, -1):
+    for j in range(min_x, max_x + 1):
+        print('⬛️' if robot.color_config[(j, i)] == 0 else '⬜️', end='')
+    print("")
+
+# print(robot.color_config)
