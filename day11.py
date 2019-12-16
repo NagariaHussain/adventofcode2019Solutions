@@ -237,9 +237,8 @@ min_y = min(robot.painted_panels, key=lambda x: x[1])[1]
 
 print(max_x, min_x, max_y, min_y)
 
+# printing a readable output
 for i in range(max_y, min_y - 1, -1):
     for j in range(min_x, max_x + 1):
         print('⬛️' if robot.color_config[(j, i)] == 0 else '⬜️', end='')
     print("")
-
-# print(robot.color_config)
